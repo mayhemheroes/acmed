@@ -1,0 +1,7 @@
+project: acmed
+target: parse-duration
+
+cmds:
+  - cmd: /parse_duration
+  - cmd: /parse_duration_no_inst @@
+    libfuzzer: false
