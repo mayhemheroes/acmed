@@ -2,6 +2,7 @@ use acme_common::error::Error;
 use nom::bytes::complete::take_while_m_n;
 use nom::character::complete::digit1;
 use nom::combinator::map_res;
+use nom::error::{Error as NomError, ErrorKind};
 use nom::multi::fold_many1;
 use nom::IResult;
 use std::time::Duration;
@@ -26,7 +27,10 @@ fn get_multiplicator(input: &str) -> IResult<&str, u64> {
 fn get_duration_part(input: &str) -> IResult<&str, Duration> {
     let (input, nb) = map_res(digit1, |s: &str| s.parse::<u64>())(input)?;
     let (input, mult) = get_multiplicator(input)?;
-    Ok((input, Duration::from_secs(nb * mult)))
+    let secs = nb
+        .checked_mul(mult)
+        .ok_or(nom::Err::Failure(NomError::new(input, ErrorKind::TooLarge)))?;
+    Ok((input, Duration::from_secs(secs)))
 }
 
 fn get_duration(input: &str) -> IResult<&str, Duration> {
