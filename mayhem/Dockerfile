@@ -1,7 +1,8 @@
 # Build Stage
 FROM --platform=linux/amd64 ubuntu:22.04 as builder
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y curl build-essential
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    curl build-essential pkg-config libssl-dev
 
 # Install latest nightly Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
@@ -30,6 +31,6 @@ RUN echo building non-instrumented harnesses && \
 # Package Stage
 FROM --platform=linux/amd64 ubuntu:22.04
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libssl-dev
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libssl3
 
 COPY --from=builder /parse_duration /parse_duration_no_inst /
