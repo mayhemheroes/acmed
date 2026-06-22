@@ -1,0 +1,32 @@
+# Additive cargo-fuzz crate for the Mayhem two-branch model. acmed is a BINARY crate with no
+# lib target, so its duration parser (acmed/src/duration.rs, `pub fn parse_duration`) is not
+# reachable as an API. This crate compiles that file VERBATIM via include!() (see src/lib.rs) so
+# both the fuzzer and the KAT oracle exercise the REAL upstream parser without editing upstream.
+# Built via `cargo fuzz build --fuzz-dir mayhem/fuzz` (see mayhem/build.sh).
+[package]
+name = "acmed-mayhem-fuzz"
+version = "0.0.0"
+authors = ["Mayhem integration"]
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[workspace]
+members = ["."]
+
+[lib]
+name = "acmed_mayhem_fuzz"
+path = "src/lib.rs"
+
+[[bin]]
+name = "parse_duration"
+path = "fuzz_targets/parse_duration.rs"
+test = false
+doc = false
+
+[dependencies]
+libfuzzer-sys = "0.4"
+nom = { version = "8.0.0", default-features = false }
+acme_common = { path = "acme_common_shim" }

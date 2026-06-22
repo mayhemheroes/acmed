@@ -1,0 +1,12 @@
+# Minimal shim of acmed acme_common library — provides ONLY error::Error, the opaque
+# String-backed error type that acmed/src/duration.rs returns. The crate name MUST be
+# acme_common so the included file use acme_common::error::Error resolves here.
+[package]
+name = "acme_common"
+version = "0.0.0"
+publish = false
+edition = "2018"
+
+[lib]
+name = "acme_common"
+path = "src/lib.rs"

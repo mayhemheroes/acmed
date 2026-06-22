@@ -1,0 +1,10 @@
+# Mayhem target: acmed duration parser (acmed/src/duration.rs :: parse_duration), built by
+# mayhem/build.sh via cargo-fuzz as a libFuzzer binary at /mayhem/parse_duration. Target name
+# parse-duration preserved from the old fork for Mayhem corpus/defect continuity.
+project: acmed
+target: parse-duration
+testsuite:
+  - file:///mayhem/mayhem/testsuite/parse_duration
+cmds:
+  - cmd: /mayhem/parse_duration
+    libfuzzer: true
